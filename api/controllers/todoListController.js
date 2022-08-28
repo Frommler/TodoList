@@ -58,12 +58,23 @@ exports.delete_a_task = function(req, res) {
   });
 };
 
-exports.allJohns = function(req, res) {
+exports.read_tasks_by_name = function(req, res) {
   Task.find({
-    name:{$regex:"John"}
+    name:{$regex: new RegExp(req.params.name, "i")} // i-нечутливіть до регістру
+    //{$regex: new RegExp("^" + thename.toLowerCase(), "i") } }
   }, function (err, tasks) {
     if(err)
       res.send(err);
     res.json(tasks);
+  });
+};
+
+
+exports.update_all_tasks_to_completed = function(req, res) {
+  Task.updateMany({'status': 'pending'}, {'status':'completed'}, 
+  function(err, users){
+    res.json({
+      message:"Tasks status updated"
+    });
   });
 };
